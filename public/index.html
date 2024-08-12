@@ -55,11 +55,9 @@
         formData.append('model', 'whisper-1');
         formData.append('language', document.getElementById('language').value);
         formData.append('response_format', 'srt');
-        console.log({'Authorization': `Bearer` +  document.getElementById('api_key').value,})
         try {
             if(mode == 'prod')
             {
-              console.log('prod!!!')
               const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
                 method: 'POST',
                 headers: {
@@ -68,6 +66,8 @@
                 },
                 body: formData
               });
+
+              message.innerHTML = 'Waiting for response from OpenAI...';
 
               if (!response.ok) {
                   var error = `Transcription API error! Status: ${response.status}. Did you enter a valid OpenAI API key?`;
