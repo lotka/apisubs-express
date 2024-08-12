@@ -4,6 +4,7 @@ const serveIndex = require("serve-index");
 const app = express();
 const PORT = 8080;
 const ROOT = path.join(__dirname, "public");
+var mode = 'prod';
 
 app.use((_, res, next) => {
   res.append("Cross-Origin-Opener-Policy", "same-origin");
@@ -13,6 +14,17 @@ app.use((_, res, next) => {
 
 app.use(express.static(ROOT));
 // app.use("/", serveIndex(ROOT));
+
+if(process.argv.length > 1) {
+  if(process.argv[2] == 'dev') {
+    mode = 'dev'
+    console.log('dev mode')
+  }
+}
+app.get("/env.js", (req, res) => {
+  res.type('application/javascript');
+  res.send(`const mode = '${mode}';`);
+});
 
 // Serve your specific page for the root route
 app.get("/", (req, res) => {
