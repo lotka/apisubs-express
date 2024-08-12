@@ -1,0 +1,19 @@
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  color:rgb(210, 210, 210);
+  background-color: rgb(13, 13, 13)
+}
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#output-video {
+  width: 100%;
+  height: auto;
+  max-width: 100vw; /* This ensures that the video doesn't exceed the viewport width */
+  display: block; /* Ensures no extra space below the video */
+  margin: 0 auto; /* Centers the video horizontally */
+}

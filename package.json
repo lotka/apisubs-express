@@ -1,0 +1,18 @@
+{
+  "name": "browser",
+  "version": "0.12.0-alpha.0",
+  "description": "browser example",
+  "private": true,
+  "scripts": {
+    "download": "node download-assets.js",
+    "prestart": "npm run download",
+    "start": "node server.js"
+  },
+  "author": "Jerome Wu <jeromewus@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "serve-index": "^1.9.1",
+    "tar": "^6.1.15"
+  }
+}
