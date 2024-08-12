@@ -7,21 +7,18 @@
     <script src="/env.js"></script>
   </head>
   <body>
+    <div>
     <h3>Generate subtitles for video with OpenAI Whisper</h3>
     <p>
     This is a small webapp which can generate subtitles for a video or audio file.
     </p>
     <h4> How does it work?</h4>
     It locally transcodes your file into compressed audio and then sends this to the OpenAI transcription API.
-    No data is sent to webapp's server and the source code is fully viewable. <br>
+    No data is sent to webapp's server and the source code is fully viewable.
     Note: running ffmpeg in the browser is slow and longer video files may take a while to transcode.
     <p>
     To get an API key, visit <a href='https://platform.openai.com/api-keys'>https://platform.openai.com/api-keys</a>. Transcription costs $0.006/minute (rounded to the nearest second)
-  </p>
-
-
-    <br>
-
+    </p>
 
     <form id="apiKeyForm">
       <label for="name">OpenAI API key</label> 
@@ -36,6 +33,8 @@
     <p id="message"></p>
     <button id="downloadBtn" style="display: none;">Download</button>
     <p id="subs"></p>
+
+  </div>
     <script>
       const { fetchFile } = FFmpegUtil;
       const { FFmpeg } = FFmpegWASM;
