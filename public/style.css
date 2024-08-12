@@ -17,9 +17,16 @@ div {
   padding-right: 10%;
   padding-left: 10%;
 }
-input {
+input, option, select {
   color:rgb(193, 193, 193);
   background-color: rgb(59, 59, 59)
+}
+@media (max-width: 768px) {
+  input, option, select, label {
+      font-size: 20px; /* Slightly larger font size on smaller screens */
+      padding: 0.75rem; /* Increase padding for easier touch interaction */
+      width: 100%; /* Make input/select fields take full width on mobile */
+  }
 }
 #output-video {
   width: 100%;
