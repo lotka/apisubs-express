@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 
 // Serve your specific page for the root route
 app.get("/audio-extractor", (req, res) => {
-  res.sendFile(path.join(ROOT, "/transcode.html"));
+  res.sendFile(path.join(ROOT, "/audio-extractor.html"));
 });
 
 // Serve your specific page for the root route
