@@ -6,6 +6,22 @@ html, body {
   color:rgb(210, 210, 210);
   background-color: rgb(13, 13, 13)
 }
+a {
+  color: #ff8c00;
+  text-decoration: none;
+  text-decoration: underline;
+}
+a:visited {
+  color: #c64c00;
+}
+a:hover {
+  color: #ababab;
+  text-decoration: underline;
+}
+a:active {
+  color: #dfdfdf;
+  text-decoration: underline;
+}
 body {
   color: var(--text);
   background-color: var(--bg);
