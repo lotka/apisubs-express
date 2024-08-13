@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
     <script src="/assets/ffmpeg/package/dist/umd/ffmpeg.js"></script>
     <script src="/assets/util/package/dist/umd/index.js"></script>
     <script src="/env.js"></script>
@@ -27,6 +27,7 @@
       const { FFmpeg } = FFmpegWASM;
       let ffmpeg = null;
       let currentSRTFile = null;
+      let lastListener = null;
 
       function loadTextFile(filePath) {
         return fetch(filePath)
@@ -43,7 +44,12 @@
       }
 
       const transcode = async ({ target: { files } }) => {
+        if(lastListener) {
+          document.getElementById('downloadBtn').removeEventListener('click', lastListener);
+        }
+
         const message = document.getElementById('message');
+        message.innerHTML = 'Loading ffmpeg..';
         if (ffmpeg === null) {
           ffmpeg = new FFmpeg();
           ffmpeg.on("log", ({ message }) => {
@@ -58,6 +64,7 @@
           });
         }
         const { name } = files[0];
+        message.innerHTML = 'Loading file..';
         await ffmpeg.writeFile(name, await fetchFile(files[0]));
         message.innerHTML = 'Locally converting video to audio...';
         console.time('exec');
@@ -70,9 +77,10 @@
 
         document.getElementById("output-video").style.display = "block";
         document.getElementById("downloadBtn").style.display = "block";
-        document.getElementById('downloadBtn').addEventListener('click', function() {            
+
+        lastListener = () => {            
             // Create a Blob object with the content
-            const blob = new Blob([currentSRTFile], { type: 'text/plain' });
+            const blob = new Blob([data], { type: 'audio/mp3' });
 
             // Create a temporary link element
             const link = document.createElement('a');
@@ -85,7 +93,9 @@
 
             // Clean up and remove the temporary link
             document.body.removeChild(link);
-        });
+        }
+
+        document.getElementById('downloadBtn').addEventListener('click', lastListener);
       }
 
       const elm = document.getElementById('fileUpload');
