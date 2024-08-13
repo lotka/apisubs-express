@@ -36,6 +36,11 @@ app.get("/audio-extractor", (req, res) => {
   res.sendFile(path.join(ROOT, "/transcode.html"));
 });
 
+// Serve your specific page for the root route
+app.get("/api-transcribe", (req, res) => {
+  res.sendFile(path.join(ROOT, "/api-transcribe.html"));
+});
+
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
