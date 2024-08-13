@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <script src="/assets/ffmpeg/package/dist/umd/ffmpeg.js"></script>
+    <script src="/assets/util/package/dist/umd/index.js"></script>
+    <script src="/env.js"></script>
+  </head>
+  <body>
+    <div>
+    <h3>Extract audio from video using your browser</h3>
+    <p>
+    This runs locally, no data is sent over the network.
+    </p>
+
+    <form id="apiKeyForm">
+      <label for="fileUpload">File upload</label> 
+      <input id='fileUpload' type="file">
+    </form>
+    <p id="message"></p>
+    <button id="downloadBtn" style="display: none;">Download</button>
+    <video id="output-video" style="display: none;" controls></video><br/>
+
+  </div>
+    <script>
+      const { fetchFile } = FFmpegUtil;
+      const { FFmpeg } = FFmpegWASM;
+      let ffmpeg = null;
+      let currentSRTFile = null;
+
+      function loadTextFile(filePath) {
+        return fetch(filePath)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.text();
+          })
+          .catch(error => {
+            console.error('Error loading the file:', error);
+            throw error;
+          });
+      }
+
+      const transcode = async ({ target: { files } }) => {
+        const message = document.getElementById('message');
+        if (ffmpeg === null) {
+          ffmpeg = new FFmpeg();
+          ffmpeg.on("log", ({ message }) => {
+            console.log(message);
+          })
+          ffmpeg.on("progress", ({ progress, time }) => {
+            message.innerHTML = `${progress * 100} %, time: ${time / 1000000} s`;
+          });
+          await ffmpeg.load({
+            // coreURL: "/assets/core/package/dist/umd/ffmpeg-core.js",
+            coreURL: "/assets/core-mt/package/dist/umd/ffmpeg-core.js",
+          });
+        }
+        const { name } = files[0];
+        await ffmpeg.writeFile(name, await fetchFile(files[0]));
+        message.innerHTML = 'Locally converting video to audio...';
+        console.time('exec');
+        await ffmpeg.exec(['-i', name,  'output.mp3','-ar','16000', '-ac','1', '-map', '0:a']);
+        console.timeEnd('exec');
+        message.innerHTML = 'Finished creating audio file';
+        const data = await ffmpeg.readFile('output.mp3');
+        const video = document.getElementById('output-video');
+        video.src = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
+
+        document.getElementById("output-video").style.display = "block";
+        document.getElementById("downloadBtn").style.display = "block";
+        document.getElementById('downloadBtn').addEventListener('click', function() {            
+            // Create a Blob object with the content
+            const blob = new Blob([currentSRTFile], { type: 'text/plain' });
+
+            // Create a temporary link element
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = name.split('.')[0] + '.mp3'; // Filename for the download
+
+            // Append the link to the document and trigger the download
+            document.body.appendChild(link);
+            link.click();
+
+            // Clean up and remove the temporary link
+            document.body.removeChild(link);
+        });
+      }
+
+      const elm = document.getElementById('fileUpload');
+      elm.addEventListener('change', transcode);
+    </script>
+  </body>
+</html>
