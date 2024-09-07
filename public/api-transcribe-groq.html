@@ -139,6 +139,7 @@
 
       const transcode = async ({ target: { files } }) => {
         const message = document.getElementById('message');
+        message.innerHTML = 'Loading ffmpeg...';
         if (ffmpeg === null) {
           ffmpeg = new FFmpeg();
           ffmpeg.on("log", ({ message }) => {
@@ -152,6 +153,7 @@
             coreURL: "/assets/core-mt/package/dist/umd/ffmpeg-core.js",
           });
         }
+        message.innerHTML = 'ffmpeg loaded. Opening file...';
         const { name } = files[0];
         await ffmpeg.writeFile(name, await fetchFile(files[0]));
         message.innerHTML = 'Locally converting video to audio...';
@@ -206,15 +208,40 @@
 
       button.addEventListener('click', async (event) => {
         event.preventDefault();
-        const errors = document.getElementById('errors');
-        errors.innerHTML = ''
-        if (fileInput.files.length > 0) {
-          transcode({ target: { files: fileInput.files } });
-        } else {
-          errors.innerHTML += 'No file uploaded<br>'
+        errors.innerHTML = '';
+        
+        // Check for errors before starting
+        if (fileInput.files.length === 0) {
+          errors.innerHTML += 'No file uploaded<br>';
         }
-        if (document.getElementById('api_key').value == '') {
-          errors.innerHTML += 'No API key'
+        if (document.getElementById('api_key').value === '') {
+          errors.innerHTML += 'No API key';
+        }
+        
+        // If there are errors, don't proceed
+        if (errors.innerHTML !== '') {
+          return;
+        }
+        
+        // Disable the button and change text
+        button.disabled = true;
+        const originalButtonText = button.textContent;
+        button.textContent = 'Transcribing...';
+        
+        try {
+          // Perform the transcription
+          await transcode({ target: { files: fileInput.files } });
+          
+          // Optionally, show a success message
+          console.log('Transcription complete!');
+        } catch (error) {
+          // Handle any errors
+          errors.innerHTML = 'An error occurred during transcription';
+          console.error('Transcription error:', error);
+        } finally {
+          // Re-enable the button and restore original text
+          button.disabled = false;
+          button.textContent = originalButtonText;
         }
       });
     </script>
