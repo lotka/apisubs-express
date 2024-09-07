@@ -64,12 +64,16 @@
 
         const message = document.getElementById('message');
         message.innerHTML = 'Sending audio to groq transcription API...';
-
+        const language = document.getElementById('language').value
         const formData = new FormData();
         formData.append('file', new Blob([data.buffer], { type: 'audio/mpeg' }), 'output.mp3');
-        formData.append('model', 'distil-whisper-large-v3-en');
+        if (language == 'en') {
+          formData.append('model', 'distil-whisper-large-v3-en');
+        } else {
+          formData.append('model', 'whisper-large-v3');
+        }
         formData.append('temperature', '0');
-        formData.append('language', document.getElementById('language').value);
+        formData.append('language', language);
         formData.append('response_format', 'verbose_json');
         try {
             if(mode == 'prod')
