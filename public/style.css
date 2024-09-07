@@ -51,3 +51,8 @@ input, option, select {
   display: block; /* Ensures no extra space below the video */
   margin: 0 auto; /* Centers the video horizontally */
 }
+#subs {
+  background-color: rgb(39, 39, 39);
+  border: 2px solid black;
+  padding: 10px;
+}
