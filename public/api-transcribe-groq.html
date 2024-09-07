@@ -156,7 +156,7 @@
         await ffmpeg.writeFile(name, await fetchFile(files[0]));
         message.innerHTML = 'Locally converting video to audio...';
         console.time('exec');
-        await ffmpeg.exec(['-i', name,  'output.mp3','-ar','16000', '-ac','1', '-map', '0:a']);
+        await ffmpeg.exec(['-i', name, '-ar','16000', '-ac','1', '-map', '0:a', 'output.mp3',]);
         console.timeEnd('exec');
         message.innerHTML = 'Finished creating audio file';
         const orginal_video = await ffmpeg.readFile(name);
