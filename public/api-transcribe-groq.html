@@ -204,7 +204,7 @@
       const fileInput = document.getElementById('fileUpload');
       const button = document.getElementById('uploadButton');
 
-      button.addEventListener('click', () => {
+      button.addEventListener('click', async (event) => {
         event.preventDefault();
         const errors = document.getElementById('errors');
         errors.innerHTML = ''
