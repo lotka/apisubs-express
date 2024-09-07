@@ -84,7 +84,6 @@
 
               message.innerHTML = 'Waiting for response from groq...';
               const jsonResponse = await response.json();
-              console.log(jsonResponse)
               if (!response.ok) {
                   var error = `Transcription API error! Status: ${response.status}. Did you enter a valid groq API key?`;
                   message.innerHTML = error;
@@ -97,7 +96,6 @@
               currentSRTFile = convertToSrt(test_subs['segments'])
             }
             message.innerHTML = 'Transcription complete, you can now download or preview the subtitles.';
-
             
             console.log(currentSRTFile)
             const subs_paragraph = document.getElementById('subs');
@@ -146,7 +144,7 @@
             console.log(message);
           })
           ffmpeg.on("progress", ({ progress, time }) => {
-            message.innerHTML = `${progress * 100} %, time: ${time / 1000000} s`;
+            message.innerHTML = `Preparing file for transcription: ${progress * 100} %, time: ${time / 1000000} s`;
           });
           await ffmpeg.load({
             // coreURL: "/assets/core/package/dist/umd/ffmpeg-core.js",
