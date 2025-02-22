@@ -8,12 +8,6 @@ var mode = 'prod';
 
 const YTDlpWrap = require('yt-dlp-wrap').default;
 
-const crypto = require("crypto");
-
-function hashURL(url) {
-  return crypto.createHash("md5").update(url).digest("hex");
-}
-
 app.use((_, res, next) => {
   res.append("Cross-Origin-Opener-Policy", "same-origin");
   res.append("Cross-Origin-Embedder-Policy", "require-corp");
@@ -57,15 +51,11 @@ app.get("/api-transcribe-groq-ext", (req, res) => {
 app.get('/api/yt-dlp', (req, res) => {
   const ytDlpWrap = new YTDlpWrap('./yt-dlp');
   const videoURL = req.query.url; // Get the YouTube URL from the query parameters
-  const outputPath = hashURL(videoURL)+'.mp4'
-  console.log(videoURL);
   let ytDlpEventEmitter = ytDlpWrap
   .execStream([
       videoURL,
       '-f',
-      'best',
-      '-o',
-      outputPath,
+      'best[ext=mp4]',
   ])
   // .on('progress', (progress) =>
   //     console.log(
