@@ -22,6 +22,9 @@ a:active {
   color: #dfdfdf;
   text-decoration: underline;
 }
+label {
+  font-weight: bold;
+}
 body {
   color: var(--text);
   background-color: var(--bg);

@@ -6,6 +6,14 @@ const PORT = 8080;
 const ROOT = path.join(__dirname, "public");
 var mode = 'prod';
 
+const YTDlpWrap = require('yt-dlp-wrap').default;
+
+const crypto = require("crypto");
+
+function hashURL(url) {
+  return crypto.createHash("md5").update(url).digest("hex");
+}
+
 app.use((_, res, next) => {
   res.append("Cross-Origin-Opener-Policy", "same-origin");
   res.append("Cross-Origin-Embedder-Policy", "require-corp");
@@ -26,24 +34,63 @@ app.get("/env.js", (req, res) => {
   res.send(`const mode = '${mode}';`);
 });
 
-// Serve your specific page for the root route
 app.get("/", (req, res) => {
   res.sendFile(path.join(ROOT, "/index.html"));
 });
 
-// Serve your specific page for the root route
 app.get("/audio-extractor", (req, res) => {
   res.sendFile(path.join(ROOT, "/audio-extractor.html"));
 });
 
-// Serve your specific page for the root route
 app.get("/api-transcribe", (req, res) => {
   res.sendFile(path.join(ROOT, "/api-transcribe.html"));
 });
 
-// Serve your specific page for the root route
 app.get("/api-transcribe-groq", (req, res) => {
   res.sendFile(path.join(ROOT, "/api-transcribe-groq.html"));
+});
+
+app.get("/api-transcribe-groq-ext", (req, res) => {
+  res.sendFile(path.join(ROOT, "/api-transcribe-groq-ext.html"));
+});
+
+app.get('/api/yt-dlp', (req, res) => {
+  const ytDlpWrap = new YTDlpWrap('./yt-dlp');
+  const videoURL = req.query.url; // Get the YouTube URL from the query parameters
+  const outputPath = hashURL(videoURL)+'.mp4'
+  console.log(videoURL);
+  let ytDlpEventEmitter = ytDlpWrap
+  .execStream([
+      videoURL,
+      '-f',
+      'best',
+      '-o',
+      outputPath,
+  ])
+  // .on('progress', (progress) =>
+  //     console.log(
+  //         progress.percent,
+  //         progress.totalSize,
+  //         progress.currentSpeed,
+  //         progress.eta
+  //     )
+  // )
+  .on('ytDlpEvent', (eventType, eventData) =>
+      console.log(eventType, eventData)
+  )
+  .on('error', (error) => console.error(error))
+  .on('close', () => console.log('all done'));
+  console.log(res)
+  res.setHeader('Content-Type', 'video/mp4');
+  ytDlpEventEmitter.pipe(res);
+
+  // console.log(ytDlpEventEmitter.ytDlpProcess.pid);
+
+  // if (!videoURL) {
+  //     return res.status(400).json({ error: 'Missing YouTube URL' });
+  // }
+
+  // res.json({ message: 'Received YouTube URL', url: videoURL, videoPath : outputPath});
 });
 
 app.listen(PORT, () => {

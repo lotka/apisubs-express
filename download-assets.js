@@ -43,3 +43,17 @@ downloadAndUntar(FFMPEG_TGZ_URL, FFMPEG_TGZ, "ffmpeg");
 downloadAndUntar(UTIL_TGZ_URL, UTIL_TGZ, "util");
 downloadAndUntar(CORE_TGZ_URL, CORE_TGZ, "core");
 downloadAndUntar(CORE_MT_TGZ_URL, CORE_MT_TGZ, "core-mt");
+
+const YTDlpWrap = require('yt-dlp-wrap').default;
+
+const downloadYTDLP = async () => {
+  if (fs.existsSync('yt-dlp')) {
+    console.log(`found yt-dlp assets.`);
+    return;
+  } else {
+    console.log('Downloading ytdlp...')
+    await YTDlpWrap.downloadFromGithub();
+  }
+};
+
+downloadYTDLP();
