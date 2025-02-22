@@ -1,5 +1,6 @@
 const tar = require("tar");
 const fs = require("fs");
+const YTDlpWrap = require('yt-dlp-wrap').default;
 
 const NPM_URL = "https://registry.npmjs.org";
 const ROOT = "public/assets";
@@ -38,22 +39,25 @@ const downloadAndUntar = async (url, tgzName, dst) => {
   fs.unlinkSync(tgzName);
 };
 
-mkdir(ROOT);
-downloadAndUntar(FFMPEG_TGZ_URL, FFMPEG_TGZ, "ffmpeg");
-downloadAndUntar(UTIL_TGZ_URL, UTIL_TGZ, "util");
-downloadAndUntar(CORE_TGZ_URL, CORE_TGZ, "core");
-downloadAndUntar(CORE_MT_TGZ_URL, CORE_MT_TGZ, "core-mt");
-
-const YTDlpWrap = require('yt-dlp-wrap').default;
-
 const downloadYTDLP = async () => {
   if (fs.existsSync('yt-dlp')) {
     console.log(`found yt-dlp assets.`);
     return;
   } else {
-    console.log('Downloading ytdlp...')
-    await YTDlpWrap.downloadFromGithub();
+    console.log('Downloading yt-dlp...');
+
+    try {
+      await YTDlpWrap.downloadFromGithub();
+      console.log('yt-dlp downloaded successfully.');
+    } catch (error) {
+      console.error('Error downloading yt-dlp:', error);
+    }
   }
 };
 
+mkdir(ROOT);
+downloadAndUntar(FFMPEG_TGZ_URL, FFMPEG_TGZ, "ffmpeg");
+downloadAndUntar(UTIL_TGZ_URL, UTIL_TGZ, "util");
+downloadAndUntar(CORE_TGZ_URL, CORE_TGZ, "core");
+downloadAndUntar(CORE_MT_TGZ_URL, CORE_MT_TGZ, "core-mt");
 downloadYTDLP();
