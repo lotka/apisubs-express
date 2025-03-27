@@ -222,6 +222,16 @@
       const fileInput = document.getElementById('fileUpload');
       const videoURL = document.getElementById('videoURL');
       const button = document.getElementById('uploadButton');
+      const apiInputField = document.getElementById('api_key');
+      const storageKey = 'api_key';
+
+      // On page load, check if there is a saved value
+      document.addEventListener('DOMContentLoaded', () => {
+        const savedKey = localStorage.getItem(storageKey);
+        if (savedKey) {
+          apiInputField.value = savedKey;
+        }
+      });
 
       button.addEventListener('click', async (event) => {
         event.preventDefault();
@@ -278,6 +288,10 @@
           document.getElementById('videoURL').value = '';
           button.disabled = false;
           button.textContent = originalButtonText;
+        }
+        // save key for next time
+        if(storageKey) {
+          localStorage.setItem(storageKey, apiInputField.value);
         }
       });
     </script>
