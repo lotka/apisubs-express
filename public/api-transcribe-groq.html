@@ -39,32 +39,13 @@
     <p id="subs"></p>
 
   </div>
+    <script src="utils.js"></script>
     <script>
       const { fetchFile } = FFmpegUtil;
       const { FFmpeg } = FFmpegWASM;
       let ffmpeg = null;
       let currentSRTFile = null;
       const test_subs = {"task":"transcribe","language":"English","duration":20.7,"text":" The idea, the idea that corporate-owned housing is able to raise your rent, three, 400 bucks a month or something under, and I'm about to announce they can't raise it more than $55.","segments":[{"id":0,"seek":0,"start":0,"end":6.4,"text":" The idea, the idea that corporate-owned housing is able to raise your rent,","tokens":[50365,440,1558,11,264,1558,300,10896,12,14683,6849,307,1075,281,5300,428,6214,11,50685],"temperature":0,"avg_logprob":-0.23285496,"compression_ratio":1.3211678,"no_speech_prob":0.026396155},{"id":1,"seek":0,"start":7.02,"end":8.64,"text":" three, 400 bucks a month or something under,","tokens":[50716,1045,11,8423,11829,257,1618,420,746,833,11,50797],"temperature":0,"avg_logprob":-0.23285496,"compression_ratio":1.3211678,"no_speech_prob":0.026396155},{"id":2,"seek":0,"start":9.54,"end":16.14,"text":" and I'm about to announce they can't raise it more than $55.","tokens":[50842,293,286,478,466,281,7478,436,393,380,5300,309,544,813,1848,13622,13,51172],"temperature":0,"avg_logprob":-0.23285496,"compression_ratio":1.3211678,"no_speech_prob":0.026396155}],"x_groq":{"id":"req_01j74va6c9et6vef3fwsm1a2qe"}}
-
-        // Function to convert float seconds to SRT timestamp
-        function secondsToSrtTime(seconds) {
-            const date = new Date(0);
-            date.setSeconds(seconds);
-            const hours = String(date.getUTCHours()).padStart(2, '0');
-            const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-            const secs = String(date.getUTCSeconds()).padStart(2, '0');
-            const milliseconds = String(Math.floor((seconds % 1) * 1000)).padStart(3, '0');
-            return `${hours}:${minutes}:${secs},${milliseconds}`;
-        }
-
-        // Function to convert data to SRT format
-        function convertToSrt(data) {
-            return data.map((item, index) => {
-                const startTime = secondsToSrtTime(item.start);
-                const endTime = secondsToSrtTime(item.end);
-                return `${index + 1}\n${startTime} --> ${endTime}\n${item.text}\n`;
-            }).join('\n');
-        }
 
       async function whisperAPI(data) {
 
@@ -118,33 +99,6 @@
             return null;
         }
     }
-
-      function loadTextFile(filePath) {
-        return fetch(filePath)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.text();
-          })
-          .catch(error => {
-            console.error('Error loading the file:', error);
-            throw error;
-          });
-      }
-
-      function srtToVtt(data) {
-          let vtt = 'WEBVTT\n\n';
-          vtt += data
-              .replace(/^\d+$/gm, '')
-              .replace(/,/g, '.')
-              .replace(/(\d{2}:\d{2}:\d{2})\.(\d{3})/g, '$1.$2')
-              // Remove the extra dot in timestamps
-              .replace(/(\d{2}:\d{2}:\d{2})\.(\d{3})\.(\d{3})/g, '$1.$2');
-          console.log("Converted VTT:", vtt);
-          const subtitleBlob = new Blob([vtt], { type: 'text/vtt' });
-          return URL.createObjectURL(subtitleBlob);
-      }
 
       const transcode = async (userVideo,mode) => {
         const message = document.getElementById('message');
@@ -252,6 +206,11 @@
           return;
         }
 
+        // Disable the button and change text
+        button.disabled = true;
+        const originalButtonText = button.textContent;
+        button.textContent = 'Transcribing...';
+
         if (fileInput.files.length > 0) {
           mode = 'upload';
           transcoding_input = fileInput.files;
@@ -265,11 +224,6 @@
         if (errors.innerHTML !== '') {
           return;
         }
-        
-        // Disable the button and change text
-        button.disabled = true;
-        const originalButtonText = button.textContent;
-        button.textContent = 'Transcribing...';
         
         try {
           // Perform the transcription

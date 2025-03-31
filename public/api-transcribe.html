@@ -29,6 +29,7 @@
     <p id="subs"></p>
 
   </div>
+    <script src="utils.js"></script>
     <script>
       const { fetchFile } = FFmpegUtil;
       const { FFmpeg } = FFmpegWASM;
@@ -93,33 +94,6 @@
             return null;
         }
     }
-
-      function loadTextFile(filePath) {
-        return fetch(filePath)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.text();
-          })
-          .catch(error => {
-            console.error('Error loading the file:', error);
-            throw error;
-          });
-      }
-
-      function srtToVtt(data) {
-          let vtt = 'WEBVTT\n\n';
-          vtt += data
-              .replace(/^\d+$/gm, '')
-              .replace(/,/g, '.')
-              .replace(/(\d{2}:\d{2}:\d{2})\.(\d{3})/g, '$1.$2')
-              // Remove the extra dot in timestamps
-              .replace(/(\d{2}:\d{2}:\d{2})\.(\d{3})\.(\d{3})/g, '$1.$2');
-          console.log("Converted VTT:", vtt);
-          const subtitleBlob = new Blob([vtt], { type: 'text/vtt' });
-          return URL.createObjectURL(subtitleBlob);
-      }
 
       const transcode = async ({ target: { files } }) => {
         const message = document.getElementById('message');
