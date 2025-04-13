@@ -31,6 +31,13 @@
       <input id='fileUpload' type="file">
       <br>
       <p id="errors"></p>
+      <button type="button" class="collapsible">Advanced Options</button>
+      <div class="content">
+        <label for="language">Provider</label> 
+        <select name="provider" id="provider">
+          <option value="groq">Groq</option> <option value="openai">OpenAI</option>
+        </select><br>
+      </div>
       <button id="uploadButton">Start Transcripton</button>
     </form>
     <video id="output-video" style="display: none;" controls></video><br/>

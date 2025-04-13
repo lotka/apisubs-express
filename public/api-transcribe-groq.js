@@ -4,46 +4,34 @@ const { FFmpeg } = FFmpegWASM;
 let ffmpeg = null;
 let currentSRTFile = null;
 const test_subs = {"task":"transcribe","language":"English","duration":20.7,"text":" The idea, the idea that corporate-owned housing is able to raise your rent, three, 400 bucks a month or something under, and I'm about to announce they can't raise it more than $55.","segments":[{"id":0,"seek":0,"start":0,"end":6.4,"text":" The idea, the idea that corporate-owned housing is able to raise your rent,","tokens":[50365,440,1558,11,264,1558,300,10896,12,14683,6849,307,1075,281,5300,428,6214,11,50685],"temperature":0,"avg_logprob":-0.23285496,"compression_ratio":1.3211678,"no_speech_prob":0.026396155},{"id":1,"seek":0,"start":7.02,"end":8.64,"text":" three, 400 bucks a month or something under,","tokens":[50716,1045,11,8423,11829,257,1618,420,746,833,11,50797],"temperature":0,"avg_logprob":-0.23285496,"compression_ratio":1.3211678,"no_speech_prob":0.026396155},{"id":2,"seek":0,"start":9.54,"end":16.14,"text":" and I'm about to announce they can't raise it more than $55.","tokens":[50842,293,286,478,466,281,7478,436,393,380,5300,309,544,813,1848,13622,13,51172],"temperature":0,"avg_logprob":-0.23285496,"compression_ratio":1.3211678,"no_speech_prob":0.026396155}],"x_groq":{"id":"req_01j74va6c9et6vef3fwsm1a2qe"}}
+const test_subs_srt = '00:00:00,000 --> 00:00:07,240\n' + 'These are test subtitles,\n' + '\n' + '2\n' +'00:00:07,240 --> 00:00:11,960\n' + 'so I can avoid calling the API to test the code\n' + '' + '3\n' + '00:00:11,960 --> 00:00:18,559\n' +'testing\n'
+
+async function loadFFMPEG(ffmpeg, message) {
+    message.innerHTML = 'Loading ffmpeg...';
+    if (ffmpeg === null) {
+        ffmpeg = new FFmpeg();
+        ffmpeg.on("log", ({ message }) => {
+            console.log(message);
+        });
+        ffmpeg.on("progress", ({ progress, time }) => {
+            message.innerHTML = `Preparing file for transcription: ${progress * 100} %, time: ${time / 1000000} s`;
+        });
+        await ffmpeg.load({
+            // coreURL: "/assets/core/package/dist/umd/ffmpeg-core.js",
+            coreURL: "/assets/core-mt/package/dist/umd/ffmpeg-core.js",
+        });
+    }
+    message.innerHTML = 'ffmpeg loaded. Opening file...';
+    return ffmpeg
+}
 
 async function whisperAPI(data) {
-
-    const message = document.getElementById('message');
-    message.innerHTML = 'Sending audio to groq transcription API...';
-    const language = document.getElementById('language').value
-    const formData = new FormData();
-    formData.append('file', new Blob([data.buffer], { type: 'audio/mpeg' }), 'output.mp3');
-    if (language == 'en') {
-        formData.append('model', 'distil-whisper-large-v3-en');
-    } else {
-        formData.append('model', 'whisper-large-v3');
-    }
-    formData.append('temperature', '0');
-    formData.append('language', language);
-    formData.append('response_format', 'verbose_json');
     try {
-        if(mode == 'prod')
-        {
-            const response = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ` +  document.getElementById('api_key').value,
-                
-            },
-            body: formData
-            });
-
-            message.innerHTML = 'Waiting for response from groq...';
-            const jsonResponse = await response.json();
-            if (!response.ok) {
-                var error = `Transcription API error! Status: ${response.status}. Did you enter a valid groq API key?`;
-                message.innerHTML = error;
-                throw new Error();
-            }
-
-
-            currentSRTFile = convertToSrt(jsonResponse['segments']);
+        const provider = document.getElementById('provider').value;
+        if(provider == 'openai') {
+            const message = await openaiAPI(data);
         } else {
-            currentSRTFile = convertToSrt(test_subs['segments'])
+            const message = await groqAPI(data);
         }
         message.innerHTML = 'Transcription complete, you can now download or preview the subtitles.';
         
@@ -60,21 +48,7 @@ async function whisperAPI(data) {
 
 const transcode = async (userVideo,mode) => {
     const message = document.getElementById('message');
-    message.innerHTML = 'Loading ffmpeg...';
-    if (ffmpeg === null) {
-        ffmpeg = new FFmpeg();
-        ffmpeg.on("log", ({ message }) => {
-        console.log(message);
-        })
-            ffmpeg.on("progress", ({ progress, time }) => {
-            message.innerHTML = `Preparing file for transcription: ${progress * 100} %, time: ${time / 1000000} s`;
-        });
-        await ffmpeg.load({
-            // coreURL: "/assets/core/package/dist/umd/ffmpeg-core.js",
-            coreURL: "/assets/core-mt/package/dist/umd/ffmpeg-core.js",
-        });
-    }
-    message.innerHTML = 'ffmpeg loaded. Opening file...';
+    ffmpeg = await loadFFMPEG(ffmpeg,message);
     const name = 'userVideo.mp4';
     console.log(mode);
     if (mode=='upload') {
@@ -136,14 +110,40 @@ const videoURL = document.getElementById('videoURL');
 const button = document.getElementById('uploadButton');
 const apiInputField = document.getElementById('api_key');
 const storageKey = 'api_key';
+const storageAdvancedOptions = 'advancedOptions'
 
 // On page load, check if there is a saved value
 document.addEventListener('DOMContentLoaded', () => {
-const savedKey = localStorage.getItem(storageKey);
-if (savedKey) {
-    apiInputField.value = savedKey;
-}
+    const savedKey = localStorage.getItem(storageKey);
+    if (savedKey) {
+        apiInputField.value = savedKey;
+    }
 });
+
+var coll = document.getElementsByClassName("collapsible");
+
+for (let i = 0; i < coll.length; i++) {
+  // Load saved state
+  let savedState = localStorage.getItem("collapsible_" + i);
+  if (savedState === "open") {
+    coll[i].classList.add("active");
+    let content = coll[i].nextElementSibling;
+    content.style.display = "block";
+  }
+
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    let content = this.nextElementSibling;
+
+    if (content.style.display === "block") {
+      content.style.display = "none";
+      localStorage.setItem("collapsible_" + i, "closed");
+    } else {
+      content.style.display = "block";
+      localStorage.setItem("collapsible_" + i, "open");
+    }
+  });
+}
 
 button.addEventListener('click', async (event) => {
 event.preventDefault();
@@ -206,3 +206,79 @@ if(storageKey) {
     localStorage.setItem(storageKey, apiInputField.value);
 }
 });
+
+async function groqAPI(data) {
+    const message = document.getElementById('message');
+    message.innerHTML = 'Sending audio to groq transcription API...';
+    const language = document.getElementById('language').value;
+    const formData = new FormData();
+    formData.append('file', new Blob([data.buffer], { type: 'audio/mpeg' }), 'output.mp3');
+    if (language == 'en') {
+        formData.append('model', 'distil-whisper-large-v3-en');
+    } else {
+        formData.append('model', 'whisper-large-v3');
+    }
+    formData.append('temperature', '0');
+    formData.append('language', language);
+    formData.append('response_format', 'verbose_json');
+
+    if (mode == 'prod') {
+        const response = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ` + document.getElementById('api_key').value,
+            },
+            body: formData
+        });
+
+        message.innerHTML = 'Waiting for response from groq...';
+        const jsonResponse = await response.json();
+        if (!response.ok) {
+            var error = `Transcription API error! Status: ${response.status}. Did you enter a valid groq API key?`;
+            message.innerHTML = error;
+            throw new Error();
+        }
+
+
+        currentSRTFile = convertToSrt(jsonResponse['segments']);
+    } else {
+        currentSRTFile = convertToSrt(test_subs['segments']);
+    }
+    return message;
+}
+
+async function openaiAPI(data) {
+    const message = document.getElementById('message');
+    message.innerHTML = 'Sending audio to OpenAI transcription API...';
+
+    const formData = new FormData();
+    formData.append('file', new Blob([data.buffer], { type: 'audio/mpeg' }), 'output.mp3');
+    formData.append('model', 'whisper-1');
+    formData.append('language', document.getElementById('language').value);
+    formData.append('response_format', 'srt');
+        if(mode == 'prod')
+        {
+          const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ` +  document.getElementById('api_key').value,
+                
+            },
+            body: formData
+          });
+    
+          message.innerHTML = 'Waiting for response from OpenAI...';
+    
+          if (!response.ok) {
+              var error = `Transcription API error! Status: ${response.status}. Did you enter a valid OpenAI API key?`;
+              message.innerHTML = error;
+              throw new Error();
+          }
+    
+    
+          currentSRTFile = await response.text();
+        } else {
+          currentSRTFile = test_subs_srt;
+        }
+    return message;
+    }
