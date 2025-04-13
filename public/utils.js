@@ -1,5 +1,5 @@
 // Function to convert float seconds to SRT timestamp
-function secondsToSrtTime(seconds) {
+export function secondsToSrtTime(seconds) {
     const date = new Date(0);
     date.setSeconds(seconds);
     const hours = String(date.getUTCHours()).padStart(2, '0');
@@ -10,7 +10,7 @@ function secondsToSrtTime(seconds) {
 }
 
 // Function to convert data to SRT format
-function convertToSrt(data) {
+export function convertToSrt(data) {
     return data.map((item, index) => {
         const startTime = secondsToSrtTime(item.start);
         const endTime = secondsToSrtTime(item.end);
@@ -18,7 +18,7 @@ function convertToSrt(data) {
     }).join('\n');
 }
 
-function srtToVtt(data) {
+export function srtToVtt(data) {
     let vtt = 'WEBVTT\n\n';
     vtt += data
         .replace(/^\d+$/gm, '')
@@ -31,7 +31,7 @@ function srtToVtt(data) {
     return URL.createObjectURL(subtitleBlob);
 }
 
-function loadTextFile(filePath) {
+export function loadTextFile(filePath) {
     return fetch(filePath)
       .then(response => {
         if (!response.ok) {
