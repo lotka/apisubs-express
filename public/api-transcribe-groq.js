@@ -146,65 +146,65 @@ for (let i = 0; i < coll.length; i++) {
 }
 
 button.addEventListener('click', async (event) => {
-event.preventDefault();
-errors.innerHTML = '';
+    event.preventDefault();
+    errors.innerHTML = '';
 
-var mode = null;
-var transcoding_input = null;
+    var mode = null;
+    var transcoding_input = null;
 
-// Check for errors before starting
-if ((fileInput.files.length === 0) && (videoURL.value.length === 0)) {
-    console.log(fileInput.files.length)
-    console.log(videoURL.value.length)
-    errors.innerHTML += 'No video given<br>';
-    return;
-}
-if (document.getElementById('api_key').value === '') {
-    errors.innerHTML += 'No API key';
-    return;
-}
+    // Check for errors before starting
+    if ((fileInput.files.length === 0) && (videoURL.value.length === 0)) {
+        console.log(fileInput.files.length)
+        console.log(videoURL.value.length)
+        errors.innerHTML += 'No video given<br>';
+        return;
+    }
+    if (document.getElementById('api_key').value === '') {
+        errors.innerHTML += 'No API key';
+        return;
+    }
 
-// Disable the button and change text
-button.disabled = true;
-const originalButtonText = button.textContent;
-button.textContent = 'Transcribing...';
+    // Disable the button and change text
+    button.disabled = true;
+    const originalButtonText = button.textContent;
+    button.textContent = 'Transcribing...';
 
-if (fileInput.files.length > 0) {
-    mode = 'upload';
-    transcoding_input = fileInput.files;
-}
-if (videoURL.value.length > 0) {
-    mode = 'yt-dlp';
-    transcoding_input = await fetch(`/api/yt-dlp?url=${encodeURIComponent(videoURL.value)}`)
-}
+    if (fileInput.files.length > 0) {
+        mode = 'upload';
+        transcoding_input = fileInput.files;
+    }
+    if (videoURL.value.length > 0) {
+        mode = 'yt-dlp';
+        transcoding_input = await fetch(`/api/yt-dlp?url=${encodeURIComponent(videoURL.value)}`)
+    }
 
-// If there are errors, don't proceed
-if (errors.innerHTML !== '') {
-    return;
-}
+    // If there are errors, don't proceed
+    if (errors.innerHTML !== '') {
+        return;
+    }
 
-try {
-    // Perform the transcription
-    console.log(mode)
-    await transcode(transcoding_input,mode);
-    
-    // Optionally, show a success message
-    console.log('Transcription complete!');
-} catch (error) {
-    // Handle any errors
-    errors.innerHTML = 'An error occurred during transcription';
-    console.error('Transcription error:', error);
-} finally {
-    // Re-enable the button and restore original text
-    document.getElementById('fileUpload').value = '';
-    document.getElementById('videoURL').value = '';
-    button.disabled = false;
-    button.textContent = originalButtonText;
-}
-// save key for next time
-if(storageKey) {
-    localStorage.setItem(storageKey, apiInputField.value);
-}
+    try {
+        // Perform the transcription
+        console.log(mode)
+        await transcode(transcoding_input,mode);
+        
+        // Optionally, show a success message
+        console.log('Transcription complete!');
+    } catch (error) {
+        // Handle any errors
+        errors.innerHTML = 'An error occurred during transcription';
+        console.error('Transcription error:', error);
+    } finally {
+        // Re-enable the button and restore original text
+        document.getElementById('fileUpload').value = '';
+        document.getElementById('videoURL').value = '';
+        button.disabled = false;
+        button.textContent = originalButtonText;
+    }
+    // save key for next time
+    if(storageKey) {
+        localStorage.setItem(storageKey, apiInputField.value);
+    }
 });
 
 async function groqAPI(data) {
