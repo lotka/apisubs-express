@@ -40,12 +40,12 @@ app.get("/api-transcribe", (req, res) => {
   res.sendFile(path.join(ROOT, "/api-transcribe.html"));
 });
 
-app.get("/api-transcribe-groq", (req, res) => {
+app.get("/app", (req, res) => {
   res.sendFile(path.join(ROOT, "/api-transcribe-groq.html"));
 });
 
-app.get("/api-transcribe-groq-ext", (req, res) => {
-  res.sendFile(path.join(ROOT, "/api-transcribe-groq-ext.html"));
+app.get("/api-transcribe-groq", (req, res) => {
+  res.sendFile(path.join(ROOT, "/api-transcribe-groq.html"));
 });
 
 app.get('/api/yt-dlp', (req, res) => {
