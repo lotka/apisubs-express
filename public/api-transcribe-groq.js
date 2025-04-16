@@ -125,6 +125,7 @@ var coll = document.getElementsByClassName("collapsible");
 for (let i = 0; i < coll.length; i++) {
   // Load saved state
   let savedState = localStorage.getItem("collapsible_" + i);
+  console.log(savedState);
   if (savedState === "open") {
     coll[i].classList.add("active");
     let content = coll[i].nextElementSibling;

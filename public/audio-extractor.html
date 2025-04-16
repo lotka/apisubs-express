@@ -1,27 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" data-bs-theme="dark">
   <head>
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../bootstrap-custom.css">
     <script src="/assets/ffmpeg/package/dist/umd/ffmpeg.js"></script>
     <script src="/assets/util/package/dist/umd/index.js"></script>
     <script src="/env.js"></script>
   </head>
   <body>
-    <div>
-    <h3>Extract audio from video using your browser</h3>
-    <p>
-    This runs locally, no data is sent over the network.
-    </p>
+    
+    <div class="container my-5">
+      <a href="../">Home</a>
+      <h3>Extract audio from video using your browser</h3>
+      <p>
+      This runs locally, no data is sent over the network.
+      </p>
 
-    <form id="apiKeyForm">
-      <label for="fileUpload">File upload</label> 
-      <input id='fileUpload' type="file">
-    </form>
-    <p id="message"></p>
-    <button id="downloadBtn" style="display: none;">Download</button>
-    <video id="output-video" style="display: none;" controls></video><br/>
-
-  </div>
+      <form id="apiKeyForm">
+        <label for="fileUpload">File upload</label> 
+        <input id='fileUpload' type="file">
+      </form>
+      <p id="message"></p>
+      <button id="downloadBtn" style="display: none;">Download</button>
+      <video id="output-video" style="display: none;" controls></video><br/>
+    </div>
     <script>
       const { fetchFile } = FFmpegUtil;
       const { FFmpeg } = FFmpegWASM;

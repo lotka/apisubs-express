@@ -1,0 +1,17 @@
+// custom-bootstrap.scss
+$primary: #916600; // orange!
+$enable-dark-mode: true;
+
+// You can also override other theme colors here:
+$theme-colors: (
+  "primary": $primary,
+  "secondary": #6c757d,
+  "success": #198754,
+  "info": #0dcaf0,
+  "warning": #ffc107,
+  "danger": #dc3545,
+  "light": #f8f9fa,
+  "dark": #212529
+);
+
+@import "node_modules/bootstrap/scss/bootstrap";
