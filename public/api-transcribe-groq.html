@@ -152,12 +152,6 @@
     <p id="message"></p>
     <button id="downloadBtn" style="display: none;">Download</button>
     <p id="subs"></p>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
-      crossorigin="anonymous"></script>
-    <script type="module" src="api-transcribe-groq.js"></script>
     <h4> How does it work?</h4>
     It locally transcodes your file into compressed audio and then sends this to the groq transcription API.
     No data is sent to webapp's server and the source code is fully viewable.
@@ -168,6 +162,12 @@
       how much you can use it.
     </p>
   </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+crossorigin="anonymous"></script>
+<script type="module" src="api-transcribe-groq.js"></script>
+
 </body>
 
 </html>
