@@ -2,8 +2,7 @@
 <html lang="en" data-bs-theme="dark">
 
 <head>
-  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../bootstrap-custom.css">
   <script src="/assets/ffmpeg/package/dist/umd/ffmpeg.js"></script>
   <script src="/assets/util/package/dist/umd/index.js"></script>
@@ -11,7 +10,7 @@
 </head>
 
 <body>
-  <div class="container my-5">
+  <div class="container my-3 my-md-5">
     <a href="../">Home</a>
     <h3>Generate subtitles for video with groq OpenAI Whisper API</h3>
     <p>
@@ -149,7 +148,9 @@
       </div>
       <button id="uploadButton" class="btn btn-primary">Start Transcripton</button>
     </form>
-    <video id="output-video" style="display: none;" controls></video><br />
+    <div class="ratio ratio-16x9">
+    <video id="output-video" style="display: none;" controls></video>
+    </div>
     <p id="message"></p>
     <button id="downloadBtn" style="display: none;">Download</button>
     <p id="subs"></p>
