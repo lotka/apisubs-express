@@ -215,7 +215,7 @@ async function groqAPI(data) {
     const formData = new FormData();
     formData.append('file', new Blob([data.buffer], { type: 'audio/mpeg' }), 'output.mp3');
     if (language == 'en') {
-        formData.append('model', 'distil-whisper-large-v3-en');
+        formData.append('model', 'whisper-large-v3-turbo');
     } else {
         formData.append('model', 'whisper-large-v3');
     }
