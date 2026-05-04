@@ -28,21 +28,23 @@ async function loadFFMPEG(ffmpeg, message) {
 async function whisperAPI(data) {
     try {
         const provider = document.getElementById('provider').value;
+        let message = null;
         if(provider == 'openai') {
-            const message = await openaiAPI(data);
+            message = await openaiAPI(data);
         } else {
-            const message = await groqAPI(data);
+            message = await groqAPI(data);
         }
-        message.innerHTML = 'Transcription complete, you can now download or preview the subtitles.';
+        message.textContent = 'Transcription complete, you can now download or preview the subtitles.';
         
         console.log(currentSRTFile)
         const subs_paragraph = document.getElementById('subs');
-        subs_paragraph.innerHTML = currentSRTFile.replace(/\n/g,'<br>')
+        subs_paragraph.style.whiteSpace = 'pre-wrap';
+        subs_paragraph.textContent = currentSRTFile;
 
         return currentSRTFile;
     } catch (error) {
         console.error('Error during fetch:', error);
-        return null;
+        throw error;
     }
 }
 
@@ -68,6 +70,9 @@ const transcode = async (userVideo,mode) => {
     const data = await ffmpeg.readFile('output.mp3');
 
     const subs = await whisperAPI(data);
+    if (!subs) {
+        throw new Error('No subtitles were returned from the transcription API');
+    }
     const video = document.getElementById('output-video');
     URL.revokeObjectURL(video.src);
     video.src = "";
@@ -109,8 +114,38 @@ const fileInput = document.getElementById('fileUpload');
 const videoURL = document.getElementById('videoURL');
 const button = document.getElementById('uploadButton');
 const apiInputField = document.getElementById('api_key');
+const errors = document.getElementById('errors');
 const storageKey = 'api_key';
 const storageAdvancedOptions = 'advancedOptions'
+
+function showError(message) {
+    errors.textContent = message;
+    errors.classList.remove('d-none');
+}
+
+function clearError() {
+    errors.textContent = '';
+    errors.classList.add('d-none');
+}
+
+function getURLValidationError(rawURL) {
+    if (rawURL.trim() === '') {
+        return null;
+    }
+
+    let parsedURL;
+    try {
+        parsedURL = new URL(rawURL.trim());
+    } catch {
+        return 'Enter a valid video URL';
+    }
+
+    if (!['http:', 'https:'].includes(parsedURL.protocol)) {
+        return 'Video URL must start with http:// or https://';
+    }
+
+    return null;
+}
 
 // On page load, check if there is a saved value
 document.addEventListener('DOMContentLoaded', () => {
@@ -148,7 +183,7 @@ for (let i = 0; i < coll.length; i++) {
 
 button.addEventListener('click', async (event) => {
     event.preventDefault();
-    errors.innerHTML = '';
+    clearError();
 
     var mode = null;
     var transcoding_input = null;
@@ -157,11 +192,16 @@ button.addEventListener('click', async (event) => {
     if ((fileInput.files.length === 0) && (videoURL.value.length === 0)) {
         console.log(fileInput.files.length)
         console.log(videoURL.value.length)
-        errors.innerHTML += 'No video given<br>';
+        showError('No video given');
+        return;
+    }
+    const urlValidationError = getURLValidationError(videoURL.value);
+    if (urlValidationError) {
+        showError(urlValidationError);
         return;
     }
     if (document.getElementById('api_key').value === '') {
-        errors.innerHTML += 'No API key';
+        showError('No API key');
         return;
     }
 
@@ -176,15 +216,22 @@ button.addEventListener('click', async (event) => {
     }
     if (videoURL.value.length > 0) {
         mode = 'yt-dlp';
-        transcoding_input = await fetch(`/api/yt-dlp?url=${encodeURIComponent(videoURL.value)}`)
     }
 
     // If there are errors, don't proceed
-    if (errors.innerHTML !== '') {
+    if (errors.textContent !== '') {
         return;
     }
 
     try {
+        if (mode === 'yt-dlp') {
+            transcoding_input = await fetch(`/api/yt-dlp?url=${encodeURIComponent(videoURL.value)}`);
+            if (!transcoding_input.ok) {
+                const errorResponse = await transcoding_input.json().catch(() => null);
+                throw new Error(errorResponse?.error || `Could not download video. Status: ${transcoding_input.status}`);
+            }
+        }
+
         // Perform the transcription
         console.log(mode)
         await transcode(transcoding_input,mode);
@@ -193,7 +240,7 @@ button.addEventListener('click', async (event) => {
         console.log('Transcription complete!');
     } catch (error) {
         // Handle any errors
-        errors.innerHTML = 'An error occurred during transcription';
+        showError(error.message || 'An error occurred during transcription');
         console.error('Transcription error:', error);
     } finally {
         // Re-enable the button and restore original text
@@ -236,8 +283,8 @@ async function groqAPI(data) {
         const jsonResponse = await response.json();
         if (!response.ok) {
             var error = `Transcription API error! Status: ${response.status}. Did you enter a valid groq API key?`;
-            message.innerHTML = error;
-            throw new Error();
+            message.textContent = error;
+            throw new Error(error);
         }
 
 
@@ -272,8 +319,8 @@ async function openaiAPI(data) {
     
           if (!response.ok) {
               var error = `Transcription API error! Status: ${response.status}. Did you enter a valid OpenAI API key?`;
-              message.innerHTML = error;
-              throw new Error();
+              message.textContent = error;
+              throw new Error(error);
           }
     
     

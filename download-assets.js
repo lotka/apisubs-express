@@ -73,9 +73,16 @@ const downloadYTDLP = async () => {
   }
 };
 
-mkdir(ROOT);
-downloadAndUntar(FFMPEG_TGZ_URL, FFMPEG_TGZ, "ffmpeg");
-downloadAndUntar(UTIL_TGZ_URL, UTIL_TGZ, "util");
-downloadAndUntar(CORE_TGZ_URL, CORE_TGZ, "core");
-downloadAndUntar(CORE_MT_TGZ_URL, CORE_MT_TGZ, "core-mt");
-downloadYTDLP();
+const main = async () => {
+  mkdir(ROOT);
+  await downloadAndUntar(FFMPEG_TGZ_URL, FFMPEG_TGZ, "ffmpeg");
+  await downloadAndUntar(UTIL_TGZ_URL, UTIL_TGZ, "util");
+  await downloadAndUntar(CORE_TGZ_URL, CORE_TGZ, "core");
+  await downloadAndUntar(CORE_MT_TGZ_URL, CORE_MT_TGZ, "core-mt");
+  await downloadYTDLP();
+};
+
+main().catch((error) => {
+  console.error("Failed to download required assets:", error);
+  process.exitCode = 1;
+});
