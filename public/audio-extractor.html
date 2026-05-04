@@ -1,28 +1,40 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Extract Audio</title>
     <link rel="stylesheet" href="../bootstrap-custom.css">
     <script src="/assets/ffmpeg/package/dist/umd/ffmpeg.js"></script>
     <script src="/assets/util/package/dist/umd/index.js"></script>
     <script src="/env.js"></script>
   </head>
-  <body>
-    
-    <div class="container my-5">
-      <a href="../">Home</a>
-      <h3>Extract audio from video using your browser</h3>
-      <p>
-      This runs locally, no data is sent over the network.
-      </p>
+  <body class="app-shell">
+    <main class="container py-4 py-md-5">
+      <nav class="top-nav">
+        <a href="../">Subtitle Tools</a>
+      </nav>
 
-      <form id="apiKeyForm">
-        <label for="fileUpload">File upload</label> 
-        <input id='fileUpload' type="file">
-      </form>
-      <p id="message"></p>
-      <button id="downloadBtn" style="display: none;">Download</button>
-      <video id="output-video" style="display: none;" controls></video><br/>
-    </div>
+      <section class="tool-layout">
+        <div class="tool-intro">
+          <div class="eyebrow">Local conversion</div>
+          <h1>Extract audio from video</h1>
+          <p class="lead">Create an MP3 from a video file without uploading it to a server.</p>
+        </div>
+
+        <div class="tool-panel">
+          <form id="apiKeyForm">
+            <div class="mb-3">
+              <label for="fileUpload" class="form-label">Video file</label> 
+              <input id='fileUpload' class="form-control" type="file">
+            </div>
+          </form>
+          <p id="message" class="status-line"></p>
+          <button id="downloadBtn" class="btn btn-primary" style="display: none;">Download MP3</button>
+          <video id="output-video" class="mt-4" style="display: none;" controls></video>
+        </div>
+      </section>
+    </main>
     <script>
       const { fetchFile } = FFmpegUtil;
       const { FFmpeg } = FFmpegWASM;

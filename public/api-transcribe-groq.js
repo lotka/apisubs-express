@@ -114,6 +114,7 @@ const fileInput = document.getElementById('fileUpload');
 const videoURL = document.getElementById('videoURL');
 const button = document.getElementById('uploadButton');
 const apiInputField = document.getElementById('api_key');
+const apiKeyToggle = document.getElementById('apiKeyToggle');
 const errors = document.getElementById('errors');
 const storageKey = 'api_key';
 const storageAdvancedOptions = 'advancedOptions'
@@ -153,6 +154,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedKey) {
         apiInputField.value = savedKey;
     }
+});
+
+apiKeyToggle.addEventListener('click', () => {
+    const isVisible = apiInputField.type === 'text';
+    apiInputField.type = isVisible ? 'password' : 'text';
+    apiKeyToggle.textContent = isVisible ? 'Show' : 'Hide';
+    apiKeyToggle.setAttribute('aria-pressed', String(!isVisible));
 });
 
 var coll = document.getElementsByClassName("collapsible");
