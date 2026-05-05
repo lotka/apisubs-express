@@ -45,7 +45,7 @@
   --bs-danger-rgb: 220, 53, 69;
   --bs-light-rgb: 248, 249, 250;
   --bs-dark-rgb: 33, 37, 41;
-  --bs-primary-text-emphasis: rgb(58, 40.8, 0);
+  --bs-primary-text-emphasis: rgb(74, 11.2, 11.2);
   --bs-secondary-text-emphasis: rgb(43.2, 46.8, 50);
   --bs-success-text-emphasis: rgb(10, 54, 33.6);
   --bs-info-text-emphasis: rgb(5.2, 80.8, 96);
@@ -53,7 +53,7 @@
   --bs-danger-text-emphasis: rgb(88, 21.2, 27.6);
   --bs-light-text-emphasis: #495057;
   --bs-dark-text-emphasis: #495057;
-  --bs-primary-bg-subtle: rgb(233, 224.4, 204);
+  --bs-primary-bg-subtle: rgb(241, 209.6, 209.6);
   --bs-secondary-bg-subtle: rgb(225.6, 227.4, 229);
   --bs-success-bg-subtle: rgb(209, 231, 220.8);
   --bs-info-bg-subtle: rgb(206.6, 244.4, 252);
@@ -61,7 +61,7 @@
   --bs-danger-bg-subtle: rgb(248, 214.6, 217.8);
   --bs-light-bg-subtle: rgb(251.5, 252, 252.5);
   --bs-dark-bg-subtle: #ced4da;
-  --bs-primary-border-subtle: rgb(211, 193.8, 153);
+  --bs-primary-border-subtle: rgb(227, 164.2, 164.2);
   --bs-secondary-border-subtle: rgb(196.2, 199.8, 203);
   --bs-success-border-subtle: rgb(163, 207, 186.6);
   --bs-info-border-subtle: rgb(158.2, 233.8, 249);
@@ -96,7 +96,7 @@
   --bs-link-color: #b91c1c;
   --bs-link-color-rgb: 185, 28, 28;
   --bs-link-decoration: underline;
-  --bs-link-hover-color: rgb(116, 81.6, 0);
+  --bs-link-hover-color: rgb(148, 22.4, 22.4);
   --bs-link-hover-color-rgb: 116, 82, 0;
   --bs-code-color: #d63384;
   --bs-highlight-color: #212529;
@@ -149,7 +149,7 @@
   --bs-danger-text-emphasis: rgb(234, 133.8, 143.4);
   --bs-light-text-emphasis: #f8f9fa;
   --bs-dark-text-emphasis: #dee2e6;
-  --bs-primary-bg-subtle: rgb(29, 20.4, 0);
+  --bs-primary-bg-subtle: rgb(37, 5.6, 5.6);
   --bs-secondary-bg-subtle: rgb(21.6, 23.4, 25);
   --bs-success-bg-subtle: rgb(5, 27, 16.8);
   --bs-info-bg-subtle: rgb(2.6, 40.4, 48);
@@ -157,7 +157,7 @@
   --bs-danger-bg-subtle: rgb(44, 10.6, 13.8);
   --bs-light-bg-subtle: #343a40;
   --bs-dark-bg-subtle: #1a1d20;
-  --bs-primary-border-subtle: rgb(87, 61.2, 0);
+  --bs-primary-border-subtle: rgb(111, 16.8, 16.8);
   --bs-secondary-border-subtle: rgb(64.8, 70.2, 75);
   --bs-success-border-subtle: rgb(15, 81, 50.4);
   --bs-info-border-subtle: rgb(7.8, 121.2, 144);
@@ -167,9 +167,9 @@
   --bs-dark-border-subtle: #343a40;
   --bs-heading-color: inherit;
   --bs-link-color: rgb(213, 118.8, 118.8);
-  --bs-link-hover-color: rgb(202.2, 181.56, 132.6);
+  --bs-link-hover-color: rgb(221.4, 146.04, 146.04);
   --bs-link-color-rgb: 213, 119, 119;
-  --bs-link-hover-color-rgb: 202, 182, 133;
+  --bs-link-hover-color-rgb: 221, 146, 146;
   --bs-code-color: rgb(230.4, 132.6, 181.2);
   --bs-highlight-color: #dee2e6;
   --bs-highlight-bg: rgb(102, 77.2, 2.8);
@@ -1930,13 +1930,13 @@ progress {
 
 .table-primary {
   --bs-table-color: #000;
-  --bs-table-bg: rgb(233, 224.4, 204);
-  --bs-table-border-color: rgb(186.4, 179.52, 163.2);
-  --bs-table-striped-bg: rgb(221.35, 213.18, 193.8);
+  --bs-table-bg: rgb(241, 209.6, 209.6);
+  --bs-table-border-color: rgb(192.8, 167.68, 167.68);
+  --bs-table-striped-bg: rgb(228.95, 199.12, 199.12);
   --bs-table-striped-color: #000;
-  --bs-table-active-bg: rgb(209.7, 201.96, 183.6);
+  --bs-table-active-bg: rgb(216.9, 188.64, 188.64);
   --bs-table-active-color: #000;
-  --bs-table-hover-bg: rgb(215.525, 207.57, 188.7);
+  --bs-table-hover-bg: rgb(222.925, 193.88, 193.88);
   --bs-table-hover-color: #000;
   color: var(--bs-table-color);
   border-color: var(--bs-table-border-color);
@@ -2969,12 +2969,12 @@ textarea.form-control-lg {
   --bs-btn-bg: #b91c1c;
   --bs-btn-border-color: #b91c1c;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: rgb(123.25, 86.7, 0);
-  --bs-btn-hover-border-color: rgb(116, 81.6, 0);
+  --bs-btn-hover-bg: rgb(157.25, 23.8, 23.8);
+  --bs-btn-hover-border-color: rgb(148, 22.4, 22.4);
   --bs-btn-focus-shadow-rgb: 162, 125, 38;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: rgb(116, 81.6, 0);
-  --bs-btn-active-border-color: rgb(108.75, 76.5, 0);
+  --bs-btn-active-bg: rgb(148, 22.4, 22.4);
+  --bs-btn-active-border-color: rgb(138.75, 21, 21);
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
   --bs-btn-disabled-bg: #b91c1c;
@@ -4492,7 +4492,7 @@ textarea.form-control-lg {
   --bs-accordion-btn-icon-width: 1.25rem;
   --bs-accordion-btn-icon-transform: rotate(-180deg);
   --bs-accordion-btn-icon-transition: transform 0.2s ease-in-out;
-  --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='rgb%2858, 40.8, 0%29' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='rgb%2874, 11.2, 11.2%29' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
   --bs-accordion-btn-focus-box-shadow: 0 0 0 0.25rem rgba(185, 28, 28, 0.25);
   --bs-accordion-body-padding-x: 1.25rem;
   --bs-accordion-body-padding-y: 1rem;
@@ -4609,8 +4609,8 @@ textarea.form-control-lg {
 }
 
 [data-bs-theme=dark] .accordion-button::after {
-  --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='rgb%28189, 163.2, 102%29'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708'/%3e%3c/svg%3e");
-  --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='rgb%28189, 163.2, 102%29'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708'/%3e%3c/svg%3e");
+  --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='rgb%28213, 118.8, 118.8%29'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708'/%3e%3c/svg%3e");
+  --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='rgb%28213, 118.8, 118.8%29'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708'/%3e%3c/svg%3e");
 }
 
 .breadcrumb {
